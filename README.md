@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# Chat-OS — Seowon Chatbot Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+AI 챗봇 서비스 **Chat-OS**의 React 기반 프론트엔드입니다.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 기술 스택
 
-### `npm start`
+| 분류 | 기술 |
+|---|---|
+| UI | React 19, CSS Modules |
+| 상태 관리 | Redux Toolkit, React Redux |
+| 라우팅 | React Router DOM v7 |
+| HTTP 통신 | Axios |
+| 인증 | JWT (Bearer Token) |
+| 빌드 도구 | CRACO (CRA 커스터마이징) |
+| 테스트 | MSW (Mock Service Worker), Testing Library |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 프로젝트 구조
 
-### `npm test`
+```
+src/
+├── assets/
+│   ├── icons/          # SVG 아이콘 컴포넌트
+│   └── logo/           # 로고 이미지
+├── components/
+│   ├── chat/
+│   │   ├── layout/     # ChatSideBar, ChatHeader, ChatContents, ChatBottom
+│   │   └── ui/         # ChatBubble, DeleteModal, UserProfile, LogoutBtn
+│   ├── login/
+│   │   └── layout/     # LoginForm
+│   └── register/
+│       ├── layout/     # RegisterForm, RegisterStep
+│       └── section/    # StepTerms, StepEmail, StepInfo, StepComplete
+├── modules/
+│   ├── auth/           # 로그인/회원가입 API, Redux 슬라이스, 훅
+│   ├── chat/           # 채팅 API, Redux 슬라이스, 훅
+│   └── shared/
+│       ├── api/        # axiosInstance (인터셉터 포함)
+│       ├── hooks/      # useIsMobile
+│       ├── utils/      # localStorage, focusHelpers
+│       └── store.js    # Redux 스토어
+├── pages/
+│   ├── ChatPage.jsx
+│   ├── LoginPage.jsx
+│   └── RegisterPage.jsx
+└── routes/
+    └── AppRouter.jsx
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 주요 기능
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 인증
+- **로그인** — 이메일/비밀번호 기반 로그인, JWT 토큰 로컬스토리지 저장
+- **회원가입** — 4단계 스텝 형태 (약관 동의 → 이메일 입력 → 정보 입력 → 완료)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 채팅
+- **채팅방 관리** — 생성, 목록 조회, 이름 수정, 삭제
+- **대화 기록** — 세션별 이전 채팅 내역 불러오기
+- **실시간 메시지** — 사용자 메시지 전송 및 AI 응답 수신
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### UI/UX
+- 사이드바를 통한 채팅방 전환
+- 모바일 반응형 지원 (`useIsMobile` 훅)
+- 채팅 상태를 로컬스토리지에 영속화
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## API 명세
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Base URL: `http://118.44.206.66:8080/api`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| 메서드 | 경로 | 설명 |
+|---|---|---|
+| POST | `/auth/login` | 로그인 |
+| POST | `/auth/register` | 회원가입 |
+| POST | `/chat` | 메시지 전송 |
+| POST | `/session/create` | 채팅방 생성 |
+| POST | `/session/list` | 채팅방 목록 조회 |
+| GET | `/session/:id` | 채팅 내역 조회 |
+| PUT | `/session/:id` | 채팅방 이름 수정 |
+| DELETE | `/session/:id` | 채팅방 삭제 |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+모든 인증이 필요한 요청에는 `Authorization: Bearer <token>` 헤더가 자동으로 추가됩니다.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 시작하기
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 사전 요구사항
 
-### Code Splitting
+- Node.js 18+
+- npm 또는 yarn
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 설치 및 실행
 
-### Analyzing the Bundle Size
+```bash
+# 의존성 설치
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# 개발 서버 실행 (http://localhost:3000)
+npm start
 
-### Making a Progressive Web App
+# 프로덕션 빌드
+npm run build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# 테스트 실행
+npm test
+```
 
-### Advanced Configuration
+### 경로 별칭
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+`craco.config.js`에 `@` → `src/` 별칭이 설정되어 있습니다.
 
-### Deployment
+```js
+import SomeComponent from '@/components/...'
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## 페이지 라우팅
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| 경로 | 페이지 | 설명 |
+|---|---|---|
+| `/` | ChatPage | 메인 채팅 페이지 |
+| `/auth/login` | LoginPage | 로그인 |
+| `/auth/register` | RegisterPage | 회원가입 |
